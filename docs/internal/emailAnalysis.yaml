@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  title: Email Analysis API
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+paths:
+  /public-api/email-analysis:
+    post:
+      summary: Perform email analysis
+      description: Perform email analysis.
+      parameters:
+        - in: header
+          name: X-API-Key
+          schema:
+            type: string
+          required: true
+          description: API key to authorize the request
+        - in: header
+          name: X-email
+          schema:
+            type: string
+            format: email
+          required: true
+          description: The email of the user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                author_email:
+                  type: string
+                  format: email
+                  description: Author email
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+                  description: Recipients emails
+                subject:
+                  type: string
+                  description: Email subject
+                body:
+                  type: string
+                  description: Email body
+                writing_started:
+                  type: integer
+                  description: Writing start time (in seconds)
+                email_id:
+                  type: integer
+                  description: Email ID
+                snippet_flag:
+                  type: boolean
+                  description: Snippet flag
+                reply_flag:
+                  type: boolean
+                  description: Reply flag
+                template_flag:
+                  type: boolean
+                  description: Template flag
+                text_editor:
+                  type: boolean
+                  description: Text editor flag
+                grammar_nw:
+                  type: boolean
+                  description: Grammar NW flag
+                mobile_optimized:
+                  type: boolean
+                  description: Mobile optimized flag
+                horizontal:
+                  type: boolean
+                  description: Horizontal flag
+                writing_time:
+                  type: string
+                  description: Writing time
+                emails_before:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      author_email:
+                        type: string
+                        format: email
+                      time_sent:
+                        type: integer
+                      recipients:
+                        type: array
+                        items:
+                          type: string
+                          format: email
+                  description: Emails before
+                image_count:
+                  type: integer
+                  description: Image count
+                gif_count:
+                  type: integer
+                  description: GIF count
+                credit_deducted:
+                  type: string
+                  description: Credit deducted
+                dark_mode:
+                  type: string
+                  description: Dark mode
+              required: 
+                - author_email
+                - subject
+                - body
+                - recipients
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analysis:
+                    type: object
+                    properties:
+                      first_word: 
+                        type: string
+                      subject:
+                        type: object
+                        properties:
+                          word_count: 
+                            type: integer
+                          title_case:
+                            type: boolean
+                          needs_work:
+                            type: boolean
+                      grade: 
+                        type: string
+                      ceq: 
+                        type: integer
+                      ceq_dynamic: 
+                        type: integer
+                      clarity: 
+                        type: integer
+                      formality: 
+                        type: integer
+                      tones: 
+                        type: object
+                        additionalProperties:
+                          type: integer
+                      tone_sentences: 
+                        type: object
+                        additionalProperties:
+                          type: integer
+                      reading_time: 
+                        type: integer
+                      body_length: 
+                        type: integer
+                      sentence_count: 
+                        type: integer
+                  highlights:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          text: 
+                            type: string
+                          value:
+                            type: integer
+                  recommendations:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized request
+        '500':
+          description: Internal server error
