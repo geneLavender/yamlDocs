@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: Track Email Reply API
+  version: 1.0.0
+servers:
+  - url: https://extension-backend.trylavender.com
+paths:
+  /track-email-reply:
+    post:
+      summary: Track Email Reply
+      description: Track Email Reply API endpoint.
+      parameters:
+        - in: header
+          name: X-API-Key
+          schema:
+            type: string
+          required: true
+          description: API key to authorize the request
+        - in: header
+          name: X-email
+          schema:
+            type: string
+            format: email
+          required: true
+          description: The email of the user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                pixel_id:
+                  type: string
+                  description: Pixel ID for tracking
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request
+                  message:
+                    type: string
+                    description: Error message
